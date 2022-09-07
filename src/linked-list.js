@@ -41,8 +41,9 @@ class LinkedList {
 			while(current.next) {
 				current = current.next;
 			}
-
-			this._tail = new Node(data, current, null);
+			const newNode = new Node(data, current, null);
+			current.next = newNode;
+			this._tail = newNode;
 		}
 
 		this.length++;
@@ -59,16 +60,48 @@ class LinkedList {
 	}
 
     at(index) {
-		return this._nodes[index].data;
+		if(index < 0 || this.length <= index){
+			return;
+		}
+
+		let current = this._head;
+
+		for(let i = 0; i < index; i++){
+			current = current.next;
+		}
+
+		return current.data;
 	}
 
     insertAt(index, data) {
+		if(index < 0 || index > this.length){
+			return false;
+		}
 		const newNode = new Node(data, null, null);
 
-		index === 0 && (this._head = newNode);
-		index === this.length && (this._tail = newNode);
+		if(index === 0){
+			newNode.next = this._head;
+			this._head = newNode;
+		} else {
+			let current = this._head;
+			let prev = null;
 
-		this._nodes.splice(index, 0, newNode);
+			// 1 -> 2 -> 3
+			//      p    c
+			for(let i = 0; i < index; i++){
+				prev = current;
+				current = current.next;
+			}
+
+			// 1 -> 2 -> 3
+			//      p  -> node ->  c
+
+			newNode.prev = prev;
+			prev.next = newNode;
+			newNode.next = current;
+		}
+
+		index === this.length && (this._tail = newNode);
 
 		this.length++;
 
@@ -89,14 +122,27 @@ class LinkedList {
 	}
 
     deleteAt(index) {
-		if(index !== 0 && this.length > 1){
-			this._nodes[index - 1].next = this._nodes[index + 1];
-		}
-		if(index !== this.length && this.length > 1){
-			this._nodes[index + 1].prev = this._nodes[index - 1];
+		if(index < 0 || this.length <= index){
+			return;
 		}
 
-		this._nodes.splice(index, 1);
+		let current = this._head;
+
+		if(index === 0){
+			this._head = current.next;
+		} else {
+			let prev = null;
+
+			for(let i = 0; i < index; i++){
+				prev = current;
+				current = current.next;
+			}
+
+			prev.next = current.next;
+		}
+
+		index === this.length && (this._tail = current);
+
 		this.length--;
 
 		return this;
@@ -119,9 +165,18 @@ class LinkedList {
 	}
 
     indexOf(data) {
-		return this._nodes
-			.map((data) => data.data)
-			.indexOf(data);
+		let current = this._head;
+		let index = 0;
+
+		while(current){
+			if(current.data === data){
+				return index;
+			}
+			current = current.next;
+			index++;
+		}
+
+		return -1;
 	}
 }
 
