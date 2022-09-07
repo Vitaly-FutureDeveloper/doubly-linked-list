@@ -5,29 +5,7 @@ class LinkedList {
 		this.length = 0;
 		this._head = null;
 		this._tail = null;
-		this._nodes = [];
 	}
-
-    // append(data) {
-	// 	const prev = this.length !== 0 && this._nodes[this.length]
-	// 	const newNode = new Node(data, prev, null);
-
-	// 	if(this.length !== 0){
-	// 		this._nodes[this.length - 1].next = newNode;
-	// 	}
-
-	// 	if(this.length === 0){
-	// 		this._head = newNode;
-	// 	}
-
-	// 	this._tail = newNode;
-
-	// 	this._nodes.push(newNode);
-
-	// 	this.length++;
-
-	// 	return this;
-	// }
 
 	append(data) {
 		if(this.length === 0){
@@ -116,7 +94,6 @@ class LinkedList {
 		this.length = 0;
 		this._head = null;
 		this._tail = null;
-		this._nodes = [];
 
 		return this;
 	}
@@ -149,17 +126,21 @@ class LinkedList {
 	}
 
     reverse() {
-		const headTemp = this._head;
+		const tempHead = this._head;
+		let current = this._head;
+
+		let prev = null;
+    	let next = null;
+
+		while(current){
+			next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+		}
 
 		this._head = this._tail;
-		this._tail = headTemp;
-
-		this._nodes.forEach((node) => {
-			const prev = {...node.prev};
-			node.prev = {...node.next};
-			node.next = prev;
-		});
-		this._nodes.reverse();
+		this._tail = tempHead;
 
 		return this;
 	}
