@@ -8,25 +8,46 @@ class LinkedList {
 		this._nodes = [];
 	}
 
-    append(data) {
-		const prev = this.length !== 0 && this._nodes[this.length]
-		const newNode = new Node(data, prev, null);
+    // append(data) {
+	// 	const prev = this.length !== 0 && this._nodes[this.length]
+	// 	const newNode = new Node(data, prev, null);
 
-		if(this.length !== 0){
-			this._nodes[this.length - 1].next = newNode;
-		}
+	// 	if(this.length !== 0){
+	// 		this._nodes[this.length - 1].next = newNode;
+	// 	}
 
+	// 	if(this.length === 0){
+	// 		this._head = newNode;
+	// 	}
+
+	// 	this._tail = newNode;
+
+	// 	this._nodes.push(newNode);
+
+	// 	this.length++;
+
+	// 	return this;
+	// }
+
+	append(data) {
 		if(this.length === 0){
+			const newNode = new Node(data, null, null);
 			this._head = newNode;
+			this._tail = newNode;
+		} else {
+			let current = this._head;
+
+			//move to the last node
+			while(current.next) {
+				current = current.next;
+			}
+
+			this._tail = new Node(data, current, null);
 		}
-
-		this._tail = newNode;
-
-		this._nodes.push(newNode);
 
 		this.length++;
 
-		return this;
+		return this
 	}
 
     head() {
